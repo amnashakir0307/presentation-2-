@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowX Salon - Customer Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+/* ============ Variables & Base Styles ============ */
+:root {
+    --bg-main: #f7efea;
+    --bg-light: #ffffff;
+    --primary: #8a5a44; /* Brownish Theme */
+    --primary-dark: #6e4634;
+    --text-dark: #5a3a2c;
+    --text-muted: #9ca3af;
+    --danger: #d9534f;
+    --success: #5cb85c;
+    --warning: #f0ad4e;
+    --sidebar-width: 260px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: var(--bg-main);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-light);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(138, 90, 68, 0.1);
+}
+.brand {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 50px;
+}
+.user-profile-side {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.user-img {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: url('https://i.pravatar.cc/150?img=47') center/cover;
+    margin: 0 auto 15px; border: 3px solid var(--primary);
+}
+.menu-link {
+    display: flex; align-items: center; gap: 15px; color: var(--text-muted);
+    text-decoration: none; padding: 12px 15px; border-radius: 10px;
+    transition: 0.3s; font-weight: 500;
+}
+.menu-link.active { background: var(--bg-main); color: var(--primary); }
+
+/* ============ MAIN CONTENT & HEADER ============ */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+.header-top h2 { font-family: 'Playfair Display', serif; color: var(--primary); }
+.balance-card {
+    background: var(--primary-dark);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ============ TABS & TABLE STYLES ============ */
+.tab-nav {
+    display: flex;
+    border-bottom: 2px solid #e0d4cc;
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+.tab-button {
+    flex-shrink: 0; padding: 12px 20px; border: none; background: transparent;
+    cursor: pointer; font-size: 16px; color: var(--text-muted);
+    border-bottom: 3px solid transparent;
+}
+.tab-button.active { color: var(--primary); border-bottom: 3px solid var(--primary); font-weight: 600; }
+.tab-pane { display: none; animation: fadeIn 0.5s ease; }
+.tab-pane.active { display: block; }
+.table-container {
+    background: var(--bg-light); padding: 25px; border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(138, 90, 68, 0.08); overflow-x: auto;
+}
+.styled-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+.styled-table th { padding: 15px; color: var(--text-muted); border-bottom: 2px solid #f0e6e0; }
+.styled-table td { padding: 15px; border-bottom: 1px solid #f0e6e0; vertical-align: middle; }
+.styled-table tr:hover { background-color: #faf7f5; }
+
+/* Status Badges */
+.badge.confirmed, .badge.paid { background: rgba(92, 184, 92, 0.2); color: var(--success); }
+.badge.pending { background: rgba(240, 173, 78, 0.2); color: var(--warning); }
+.badge.completed { background: rgba(0, 0, 0, 0.1); color: #333; }
+
+/* Action Buttons */
+.action-btn {
+    border: none; background: rgba(138, 90, 68, 0.1); color: var(--primary);
+    width: 35px; height: 35px; border-radius: 8px; cursor: pointer; margin-right: 8px;
+    transition: 0.2s; font-size: 14px;
+}
+.action-btn:hover { background: var(--primary); color: white; }
+.action-btn.review-btn { background: rgba(0, 0, 0, 0.1); color: #333; }
+.action-btn.delete-btn { color: var(--danger); background: rgba(217, 83, 79, 0.1); }
+.action-btn.delete-btn:hover { background: var(--danger); color: white; }
+
+/* Favorites Grid */
+.favorites-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+}
+.favorite-item {
+    background: var(--bg-light); padding: 20px; border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(138, 90, 68, 0.08);
+}
+.btn-primary { 
+    width: 100%; padding: 12px; border: none; background: var(--primary); color: white;
+    font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.3s;
+}
+.btn-primary:hover { background: var(--primary-dark); }
+
+
+/* ============ MODAL STYLES ============ */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center;
+    z-index: 100; opacity: 0; transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-box {
+    background: var(--bg-light); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px;
+    transform: translateY(-20px); transition: transform 0.3s ease;
+}
+.form-group { margin-bottom: 20px; }
+.form-control { width: 100%; padding: 12px; border: 2px solid #e0d4cc; border-radius: 8px; }
+
+
+/* ============ RESPONSIVE (Critical) ============ */
+@media (max-width: 992px) {
+    .dashboard-container { flex-direction: column; }
+    .sidebar { width: 100%; padding: 20px; flex-direction: row; justify-content: space-between; align-items: center; }
+    .brand { margin-bottom: 0; font-size: 22px; }
+    .user-profile-side { display: none; }
+    .menu-list { display: flex; gap: 10px; }
+    .menu-link span { display: none; } /* Hide text on smaller screens */
+    .main-content { padding: 20px; }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <i >
+                <img src="LuZkud (1) - Shortcut.lnk" alt="" srcset="" width="95px">
+            </i> 
+        </div>
+        <div class="user-profile-side">
+            <div class="user-img"></div>
+            <h4>Sarah Johnson</h4> <p style="color: var(--text-muted); font-size: 14px;">User ID: 9005</p>
+        </div>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="#" class="menu-link active"><i class="fa-solid fa-house"></i> <span>Dashboard</span></a></li>
+            <li class="menu-item"><a href="#" class="menu-link"><i class="fa-solid fa-calendar-check"></i> <span>New Booking</span></a></li>
+            <li class="menu-item"><a href="#" class="menu-link"><i class="fa-solid fa-gear"></i> <span>Settings</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        
+        <header class="header-top">
+            <div class="welcome-text">
+                <h2>Hello, User!</h2> <p class="text-muted">Manage your beauty journey.</p>
+            </div>
+            <div class="balance-card">
+                <i class="fa-solid fa-star"></i> Loyalty Points: **350 pts**
+            </div>
+        </header>
+
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="openTab(event, 'Appointments')"><i class="fa-solid fa-calendar-days"></i> Appointments</button>
+            <button class="tab-button" onclick="openTab(event, 'Transactions')"><i class="fa-solid fa-credit-card"></i> Payments</button>
+            <button class="tab-button" onclick="openTab(event, 'Favorites')"><i class="fa-solid fa-heart"></i> Favorites</button>
+        </div>
+
+        <div id="Appointments" class="tab-pane active">
+            <div class="table-container">
+                <h3 style="margin-bottom: 20px;">Booking History</h3>
+                <table class="styled-table" id="bookingTable">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Date & Time</th>
+                            <th>Stylist</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="Transactions" class="tab-pane">
+            <div class="table-container">
+                <h3 style="margin-bottom: 20px;">Transaction Details</h3>
+                <table class="styled-table" id="transactionTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="Favorites" class="tab-pane">
+            <h3 style="margin-bottom: 20px;">My Favorite Services & Stylists</h3>
+            <div class="favorites-grid" id="favoritesGrid">
+                </div>
+        </div>
+
+    </main>
+</div>
+
+<div class="modal-overlay" id="editBookingModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Edit Appointment</h3>
+            <span class="close-modal" onclick="closeModal('editBookingModal')"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        <form id="editBookingForm">
+            <input type="hidden" id="editBookingId">
+            <div class="form-group"> <label>Service Name</label> <input type="text" id="editService" class="form-control" required> </div>
+            <div class="form-group"> <label>Date</label> <input type="date" id="editDate" class="form-control" required> </div>
+            <div class="form-group">
+                <label>Stylist</label>
+                <select id="editStylist" class="form-control">
+                    <option value="Zara Allen">Zara Allen</option>
+                    <option value="Maria Cruz">Maria Cruz</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="reviewModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Submit Review</h3>
+            <span class="close-modal" onclick="closeModal('reviewModal')"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        <form id="reviewForm">
+            <p style="margin-bottom: 15px; font-size: 14px;">Review for <span id="reviewStylistName" style="font-weight: 600;"></span></p>
+            <div class="form-group"> <label>Rating (1 to 5 Stars)</label> <input type="number" id="reviewRating" class="form-control" min="1" max="5" required> </div>
+            <div class="form-group"> <label>Comments</label> <textarea id="reviewComment" class="form-control" rows="4"></textarea> </div>
+            <button type="submit" class="btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+/* ============ SUPABASE READY: CORE SETUP ============ */
+// Note: In a real app, you would initialize Supabase here:
+// const { createClient } = require('@supabase/supabase-js');
+// const supabase = createClient('YOUR_URL', 'YOUR_KEY');
+
+/* ============ DUMMY DATA (Simulating data fetched from Supabase) ============ */
+const CURRENT_USER_NAME = "Amna Qasim";
+const CURRENT_USER_ID = "9005"; 
+
+let bookings = [
+    { id: 100, service: "Classic Manicure", date: "2025-11-15", time: "16:00", stylist: "Hania A.", status: "Completed", hasReviewed: false },
+    { id: 101, service: "Hydra Facial Glow", date: "2025-12-25", time: "14:30", stylist: "Zara Allen", status: "Confirmed", hasReviewed: true },
+];
+
+let transactions = [
+    { id: 501, amount: 150.00, date: "2025-11-15", method: "Credit Card", status: "Paid" },
+    { id: 502, amount: 200.00, date: "2025-12-01", method: "JazzCash", status: "Processing" }
+];
+
+let favorites = [ 
+    { type: "Stylist", name: "Zara Allen", specialization: "Hair Color Specialist", rating: 4.8 },
+    { type: "Service", name: "Deep Tissue Massage", price: "$75", lastUsed: "3 weeks ago" },
+];
+
+/* ============ DYNAMIC USER NAME FUNCTION ============ */
+function setUserName() {
+    document.querySelector('.user-profile-side h4').textContent = CURRENT_USER_NAME;
+    document.querySelector('.welcome-text h2').innerHTML = `Hello, ${CURRENT_USER_NAME}!`;
+}
+
+/* ============ SUPABASE PLACEHOLDER FUNCTIONS (No actual error, only simulation) ============ */
+
+// 1. SUPABASE: Update Booking
+async function saveBookingChanges(id, data) {
+    // const { data, error } = await supabase
+    //     .from('bookings')
+    //     .update(data)
+    //     .eq('id', id);
+    // if (error) throw error;
+    return true; // Simulate success
+}
+
+// 2. SUPABASE: Delete Booking
+async function deleteBookingFromDB(id) {
+    // const { error } = await supabase
+    //     .from('bookings')
+    //     .delete()
+    //     .eq('id', id);
+    // if (error) throw error;
+    return true; // Simulate success
+}
+
+// 3. SUPABASE: Submit Review
+async function submitReviewToDB(reviewData) {
+    // const { data, error } = await supabase
+    //     .from('reviews')
+    //     .insert([reviewData]);
+    // if (error) throw error;
+    return true; // Simulate success
+}
+
+
+/* ============ RENDER FUNCTIONS ============ */
+
+function openTab(evt, tabName) {
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    evt.currentTarget.classList.add('active');
+}
+
+function renderBookingsTable() {
+    const tableBody = document.getElementById('bookingTableBody');
+    tableBody.innerHTML = '';
+    
+    if (bookings.length === 0) { tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No current bookings.</td></tr>'; return; }
+
+    const today = new Date().toISOString().split('T')[0];
+
+    bookings.forEach(booking => {
+        let statusClass = booking.status === 'Confirmed' ? 'confirmed' : (booking.status === 'Pending' ? 'pending' : 'completed');
+        let actionButtons = '';
+        const isPast = booking.date < today && booking.status !== 'Pending' && booking.status !== 'Confirmed';
+        
+        if (isPast) {
+            if (!booking.hasReviewed) {
+                actionButtons += `<button class="action-btn review-btn" onclick="openReviewModal(${booking.id})" title="Write Review"><i class="fa-solid fa-star"></i></button>`;
+            }
+            actionButtons += `<button class="action-btn" onclick="quickReBook(${booking.id})" title="Book Again"><i class="fa-solid fa-repeat"></i></button>`;
+        } else if (booking.status === 'Confirmed' || booking.status === 'Pending') {
+            actionButtons += `<button class="action-btn" onclick="openEditBookingModal(${booking.id})" title="Edit Booking"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="action-btn delete-btn" onclick="deleteBooking(${booking.id})" title="Cancel Booking"><i class="fa-solid fa-trash"></i></button>`;
+        }
+
+        const row = `
+            <tr>
+                <td><strong>${booking.service}</strong></td>
+                <td><i class="fa-regular fa-calendar"></i> ${booking.date} @ ${booking.time}</td>
+                <td>${booking.stylist}</td>
+                <td><span class="badge ${statusClass}">${booking.status}</span></td>
+                <td>${actionButtons}</td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+
+function renderTransactionsTable() {
+    const tableBody = document.getElementById('transactionTableBody');
+    tableBody.innerHTML = '';
+    transactions.forEach(tx => {
+        let statusClass = tx.status === 'Paid' ? 'paid' : (tx.status === 'Processing' ? 'pending' : 'failed');
+        const row = `
+            <tr>
+                <td>#${tx.id}</td>
+                <td><strong>$${tx.amount.toFixed(2)}</strong></td>
+                <td>${tx.date}</td>
+                <td>${tx.method}</td>
+                <td><span class="badge ${statusClass}">${tx.status}</span></td>
+                <td><button class="action-btn" title="View Details" disabled><i class="fa-solid fa-magnifying-glass"></i></button></td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+}
+
+function renderFavoritesGrid() {
+    const grid = document.getElementById('favoritesGrid');
+    grid.innerHTML = '';
+
+    if (favorites.length === 0) { grid.innerHTML = '<p style="text-align: center; padding: 20px;">You have no saved favorites yet.</p>'; return; }
+
+    favorites.forEach(item => {
+        let content = item.type === 'Stylist' 
+            ? `<p class="info"><i class="fa-solid fa-briefcase"></i> ${item.specialization}</p><p class="info"><i class="fa-solid fa-star" style="color: #f9bf35"></i> Rating: ${item.rating}</p>`
+            : `<p class="info"><i class="fa-solid fa-dollar-sign"></i> Price: ${item.price}</p><p class="info"><i class="fa-solid fa-clock-rotate-left"></i> Last Used: ${item.lastUsed}</p>`;
+        
+        const itemHtml = `
+            <div class="favorite-item">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h4>${item.name} (${item.type})</h4>
+                    <button class="action-btn delete-btn" onclick="removeFavorite('${item.name}')" title="Remove Favorite"><i class="fa-solid fa-trash"></i></button>
+                </div>
+                ${content}
+                 <button class="btn-primary" style="margin-top: 10px; padding: 10px; background: var(--primary-dark);" onclick="quickReBookByFavorite('${item.name}')">Book Now</button>
+            </div>
+        `;
+        grid.innerHTML += itemHtml;
+    });
+}
+
+/* ============ ACTION HANDLERS (SUPABASE INTEGRATION POINTS) ============ */
+
+// Delete Booking
+function deleteBooking(id) {
+    Swal.fire({
+        title: 'Cancel Booking?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d9534f',
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await deleteBookingFromDB(id); // Supabase Call
+                bookings = bookings.filter(booking => booking.id !== id);
+                renderBookingsTable();
+                Swal.fire('Cancelled!', 'Your booking has been cancelled.', 'success');
+            } catch (e) {
+                Swal.fire('Error!', 'Could not cancel booking.', 'error');
+            }
+        }
+    })
+}
+
+// Edit Booking
+const editBookingForm = document.getElementById('editBookingForm');
+editBookingForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const idToUpdate = parseInt(document.getElementById('editBookingId').value);
+    const dataToUpdate = {
+        service: document.getElementById('editService').value,
+        date: document.getElementById('editDate').value,
+        stylist: document.getElementById('editStylist').value
+    };
+
+    try {
+        await saveBookingChanges(idToUpdate, dataToUpdate); // Supabase Call
+        // Update local array for immediate UI refresh
+        const index = bookings.findIndex(b => b.id === idToUpdate);
+        if (index !== -1) Object.assign(bookings[index], dataToUpdate);
+        
+        renderBookingsTable();
+        closeModal('editBookingModal');
+        Swal.fire({ icon: 'success', title: 'Updated!', text: 'Booking changes saved.' });
+    } catch (e) {
+        Swal.fire({ icon: 'error', title: 'Failed!', text: 'Could not save changes.' });
+    }
+});
+
+// Submit Review
+document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const reviewData = {
+        rating: document.getElementById('reviewRating').value,
+        comment: document.getElementById('reviewComment').value,
+        stylistName: document.getElementById('reviewStylistName').textContent,
+        userId: CURRENT_USER_ID 
+    };
+    
+    try {
+        await submitReviewToDB(reviewData); // Supabase Call
+        
+        // Update local status for UI
+        const bookingToUpdate = bookings.find(b => b.stylist === reviewData.stylistName && b.status === 'Completed');
+        if(bookingToUpdate) bookingToUpdate.hasReviewed = true; 
+        
+        closeModal('reviewModal');
+        renderBookingsTable(); 
+        Swal.fire({ icon: 'success', title: 'Thank You!', text: 'Your review has been submitted.' });
+    } catch (e) {
+        Swal.fire({ icon: 'error', title: 'Failed!', text: 'Could not submit review.' });
+    }
+});
+
+
+/* ============ MODAL AND UTILITY FUNCTIONS ============ */
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+}
+
+function openEditBookingModal(id) {
+    const bookingToEdit = bookings.find(b => b.id === id);
+    if (bookingToEdit) {
+        document.getElementById('editBookingId').value = bookingToEdit.id;
+        document.getElementById('editService').value = bookingToEdit.service;
+        document.getElementById('editDate').value = bookingToEdit.date;
+        document.getElementById('editStylist').value = bookingToEdit.stylist;
+        document.getElementById('editBookingModal').classList.add('active');
+    }
+}
+
+function openReviewModal(bookingId) {
+    const booking = bookings.find(b => b.id === bookingId);
+    if (booking) {
+        document.getElementById('reviewStylistName').textContent = booking.stylist;
+        document.getElementById('reviewModal').classList.add('active');
+    }
+}
+
+function quickReBook(id) {
+    const booking = bookings.find(b => b.id === id);
+    Swal.fire({
+        icon: 'info', title: 'Re-booking', text: `Re-booking ${booking.service}. Select date/time.`, confirmButtonText: 'Go to Booking Page', confirmButtonColor: '#8a5a44'
+    });
+}
+
+function quickReBookByFavorite(name) {
+    Swal.fire({ icon: 'info', title: 'Quick Booking', text: `Starting quick booking for ${name}.`, confirmButtonText: 'Start Booking', confirmButtonColor: '#8a5a44' });
+}
+
+function removeFavorite(name) {
+    // Supabase: Remove from 'favorites' table
+    favorites = favorites.filter(f => f.name !== name);
+    renderFavoritesGrid();
+    Swal.fire({ icon: 'success', title: 'Removed!', text: `${name} removed from favorites.`, confirmButtonColor: '#8a5a44' });
+}
+
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('active');
+    }
+}
+
+/* ============ INITIAL LOAD ============ */
+document.addEventListener('DOMContentLoaded', () => {
+    setUserName(); 
+    renderBookingsTable();
+    renderTransactionsTable();
+    renderFavoritesGrid();
+    document.querySelector('.tab-button').click(); 
+});
+</script>
+                                           
+</body>
+</html>

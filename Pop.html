@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowX Branch Selector</title>
+
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root{
+  --cream:#E4DCD4;
+  --cream-light:#F5F0EB;
+  --text-dark:#46413C;
+  --text-soft:#5A5550;
+  --dark:#36302C;
+  --accent:#ba9f8a;
+}
+
+/* Overlay */
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  backdrop-filter:blur(6px);
+  background:rgba(0,0,0,0.35);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+/* Popup */
+.popup-box{
+  width:92%;
+  max-width:420px;
+  background:var(--cream-light);
+  border-radius:18px;
+  padding:28px;
+  box-shadow:0 8px 35px rgba(0,0,0,0.25);
+  animation:fade 0.4s ease;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:scale(0.95);}
+  to{opacity:1; transform:scale(1);}
+}
+
+.glowx{
+  font-size:15px;
+  color:var(--text-soft);
+  margin-bottom:12px;
+}
+
+h2{
+  margin-bottom:18px;
+  color:var(--text-dark);
+  font-size:24px;
+  font-weight:700;
+}
+
+/* Branch cards */
+.branches{
+  display:flex;
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.branch{
+  width:50%;
+  background:white;
+  padding:18px;
+  border-radius:14px;
+  text-align:center;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:0.3s;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.branch i{
+  font-size:40px;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+
+.branch p{
+  font-weight:600;
+  color:var(--text-dark);
+}
+
+.branch:hover{
+  transform:translateY(-4px);
+}
+
+.branch.active{
+  border-color:var(--dark);
+  box-shadow:0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* Dropdown */
+select{
+  width:100%;
+  padding:13px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:15px;
+  margin-top:6px;
+  outline:none;
+}
+
+/* Button */
+button{
+  width:100%;
+  margin-top:22px;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:var(--dark);
+  color:white;
+  font-size:16px;
+  letter-spacing:0.5px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  opacity:0.9;
+}
+</style>
+</head>
+<body>
+
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+
+    <div class="glowx">Welcome to <b>GlowX Salon</b></div>
+    <h2>Select Your Branch</h2>
+
+    <div class="branches">
+      <div class="branch" id="karachiBtn" onclick="selectCity('Karachi')">
+        <i class="fa-solid fa-city"></i>
+        <p>Karachi</p>
+      </div>
+
+      <div class="branch" id="lahoreBtn" onclick="selectCity('Lahore')">
+        <i class="fa-solid fa-building"></i>
+        <p>Lahore</p>
+      </div>
+    </div>
+
+    <select id="areaSelect">
+      <option value="">Select your area</option>
+    </select>
+
+    <button onclick="continueSelection()">Continue</button>
+
+  </div>
+</div>
+
+<script>
+let selectedCity = "";
+
+const karachiAreas = [
+  "Nazimabad","Lyari","Bahadurabad","Gulshan-e-Iqbal",
+  "Johar","North Karachi","North Nazimabad","FB Area"
+];
+
+const lahoreAreas = [
+  "DHA","Gulberg","Model Town","Johar Town",
+  "Wapda Town","Township","Bahria Town"
+];
+
+function selectCity(city){
+  selectedCity = city;
+
+  karachiBtn.classList.remove("active");
+  lahoreBtn.classList.remove("active");
+
+  if(city === "Karachi"){
+    karachiBtn.classList.add("active");
+    loadAreas(karachiAreas);
+  }else{
+    lahoreBtn.classList.add("active");
+    loadAreas(lahoreAreas);
+  }
+}
+
+function loadAreas(areas){
+  areaSelect.innerHTML = `<option value="">Select your area</option>`;
+  areas.forEach(area=>{
+    areaSelect.innerHTML += `<option>${area}</option>`;
+  });
+}
+
+function continueSelection(){
+  const area = areaSelect.value;
+
+  if(!selectedCity){
+    alert("Please select city first");
+    return;
+  }
+  if(!area){
+    alert("Please select area");
+    return;
+  }
+
+  alert(`Branch Selected: ${selectedCity} - ${area}`);
+  popup.style.display = "none";
+}
+
+window.onload = ()=>{
+  popup.style.display = "flex";
+};
+</script>
+
+</body>
+  </html>

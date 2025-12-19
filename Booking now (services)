@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Booking | Supabase</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --primary: #7a5c58;
+            --secondary: #d4cdc3;
+            --white: #ffffff;
+            --dark: #333;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 950px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .hero {
+            flex: 1;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+                        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80') center/cover;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            color: white;
+            min-height: 400px;
+        }
+
+        .booking-form { flex: 1.2; padding: 30px; background: #fff; }
+        .booking-form h2 { margin-bottom: 20px; text-align: center; color: var(--dark); }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: #666; margin-bottom: 5px; text-transform: uppercase; }
+
+        input, select {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; background: #f9f9f9;
+        }
+
+        input:focus, select:focus { border-color: var(--primary); }
+
+        .time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 5px; }
+        .time-slot {
+            padding: 8px; text-align: center; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 12px; transition: 0.2s;
+        }
+        .time-slot.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; flex: 1; }
+        .btn-submit { background: var(--primary); color: white; }
+        .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+        @media (max-width: 850px) {
+            .container { flex-direction: column; }
+            .hero { min-height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Let Your Body <br> Rest Today</h1>
+        </div>
+
+        <div class="booking-form">
+            <h2>Book Appointment</h2>
+            
+            <form id="salonForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="userName" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Gmail / Email</label>
+                    <input type="email" id="userEmail" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Service</label>
+                    <select id="userService" required>
+                        <option value="" disabled selected>Choose a service...</option>
+                        <option>Haircut & Styling</option>
+                        <option>Hair Coloring</option>
+                        <option>Organic Facial</option>
+                        <option>Luxury Manicure</option>
+                        <option>Full Body Massage</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="dateInput" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Available Time</label>
+                    <div class="time-grid" id="timeGrid">
+                        <div class="time-slot">10:00 AM</div>
+                        <div class="time-slot">12:00 PM</div>
+                        <div class="time-slot">02:00 PM</div>
+                        <div class="time-slot">04:00 PM</div>
+                        <div class="time-slot">06:00 PM</div>
+                        <div class="time-slot">08:00 PM</div>
+                    </div>
+                    <input type="hidden" id="selectedTime" required>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" id="submitBtn" class="btn btn-submit">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Supabase Connection (Apni Details Yahan Dalein) ---
+        const SUPABASE_URL = 'https://gshfphlirunwzghugpyh.supabase.co'; 
+        const SUPABASE_KEY = 'sb_publishable_JJUoQ771Sy0KJgdUOnFD_g_VIkpeB5X';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // --- 2. Time Slot Logic ---
+        const slots = document.querySelectorAll('.time-slot');
+        const timeInput = document.getElementById('selectedTime');
+
+        slots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                slots.forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+                timeInput.value = slot.innerText;
+            });
+        });
+
+        // --- 3. Form Submission to Supabase ---
+        const form = document.getElementById('salonForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if(!timeInput.value) {
+                alert("Please select a time slot!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+
+            // Database mein data bhej raha hai
+            const { data, error } = await _supabase
+                .from('bookings') // Table ka naam jo aapne banaya
+                .insert([
+                    { 
+                        customer_name: document.getElementById('userName').value,
+                        email: document.getElementById('userEmail').value,
+                        service_name: document.getElementById('userService').value,
+                        booking_date: document.getElementById('dateInput').value,
+                        booking_time: timeInput.value
+                    }
+                ]);
+
+            if (error) {
+                alert("Error: " + error.message);
+                btn.disabled = false;
+                btn.innerText = "Confirm Booking";
+            } else {
+                alert("Booking Successful! We will contact you at " + document.getElementById('userEmail').value);
+                form.reset();
+                slots.forEach(s => s.classList.remove('selected'));
+                btn.disabled = false;
+                btn.innerText = "Confirm Booking";
+            }
+        });
+
+        // Min date setting
+        document.getElementById('dateInput').min = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>

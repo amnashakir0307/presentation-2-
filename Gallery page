@@ -1,0 +1,865 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+
+<meta name="viewport" content="width=
+
+, initial-scale=1.0">
+
+<title>Document</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet"><style>
+
+    *{
+
+        margin: 0;
+
+        padding: 0;
+
+        cursor: pointer;
+
+        font-family: "Dancing Script", cursive;
+
+font-optical-sizing: auto;
+
+}
+
+    
+
+    .header {
+
+        /* background-color:#8b5b40; */
+
+        background-color: #cc8e69;
+
+        color: #F5F2EB;
+
+        width: 100%;
+
+        height: 30px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+    }
+
+
+
+    .list-glry {
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+
+
+
+
+    }
+
+
+
+    .list-glry ul {
+
+        display: flex;
+
+        font-family: sans-serif;
+
+        width: 80%;
+
+        justify-content: space-around;
+
+        align-items: center;
+
+    }
+
+
+
+    .list-glry ul li {
+
+        list-style-type: none;
+
+        letter-spacing: 2px;
+
+        font-size: 14px;
+
+    }
+
+
+
+    /* Body & Fonts */
+
+    body {
+
+        font-family: Arial, sans-serif;
+
+        margin: 0;
+
+        background-color: #f8f5f2;
+
+        color: #363020;
+
+
+
+    }
+
+
+
+    /* Header */
+
+    .header {
+
+        background-color: #363020;
+
+           background-color: #cc8e69;
+
+     background-color:#8b5b40; 
+
+        color: #F5F2EB;
+
+        width: 100%;
+
+        height: 30px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 16px;
+
+        letter-spacing: 1px;
+
+    }
+
+   
+
+
+
+    /* Navigation Lists */
+
+    .list-glry {
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        margin: 20px 0;
+
+    }
+
+
+
+    .list-glry ul {
+
+        display: flex;
+
+        font-family: sans-serif;
+
+        width: 80%;
+
+        justify-content: space-around;
+
+        align-items: center;
+
+        flex-wrap: wrap;
+
+        padding: 0;
+
+        list-style: none;
+
+    }
+
+
+
+    /* .list-glry ul li {
+
+        list-style-type: none;
+
+        letter-spacing: 1px;
+
+        font-size: 14px;
+
+        cursor: pointer;
+
+        padding: 8px 15px;
+
+        background-color: #E4DCD4;
+
+        border-radius: 5px;
+
+        transition: 0.3s;
+
+        font-weight: bold;
+
+    }
+
+
+
+    .list-glry ul li:hover {
+
+        background-color: #F5F0EB;
+
+        color: #363020;
+
+    } */
+
+
+
+    /* Gallery Sections */
+
+    .gallery-section {
+
+        padding: 40px 10%;
+
+    }
+
+
+
+    .gallery-section h2 {
+
+        text-align: center;
+
+        margin-bottom: 25px;
+
+        font-size: 24px;
+
+    }
+
+
+
+    /* Animated Cards (Large for full-body images) */
+
+    .gallery-container {
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 20px;
+
+        justify-content: center;
+
+    }
+
+
+
+    .gallery-card {
+
+        width: 250px;
+
+        height: 400px;
+
+        border-radius: 10px;
+
+        overflow: hidden;
+
+        position: relative;
+
+        cursor: pointer;
+
+        transition: transform 0.3s, box-shadow 0.3s;
+
+    }
+
+
+
+    .gallery-card img {
+
+        width: 100%;
+
+        height: 100%;
+
+        object-fit: cover;
+
+        display: block;
+
+        transition: transform 0.3s;
+
+    }
+
+
+
+    .gallery-card:hover {
+
+        transform: translateY(-10px);
+
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+
+    }
+
+
+
+    /* Overlay Text on Hover */
+
+    .gallery-card span {
+
+        position: absolute;
+
+        bottom: 0;
+
+        width: 100%;
+
+        text-align: center;
+
+        color: #fff;
+
+        background: rgba(0, 0, 0, 0.4);
+
+        padding: 5px 0;
+
+        font-weight: bold;
+
+        opacity: 0;
+
+        transition: opacity 0.3s;
+
+    }
+
+
+
+    .gallery-card:hover span {
+
+        opacity: 1;
+
+    }
+
+
+
+    /* Modal / Lightbox */
+
+    #imageModal {
+
+        display: none;
+
+        position: fixed;
+
+        top: 0;
+
+        left: 0;
+
+        width: 100%;
+
+        height: 100%;
+
+        background: rgba(0, 0, 0, 0.85);
+
+        justify-content: center;
+
+        align-items: center;
+
+        z-index: 1000;
+
+    }
+
+
+
+    #imageModal div {
+
+        position: relative;
+
+        max-width: 90%;
+
+        max-height: 90%;
+
+    }
+
+
+
+    #imageModal img {
+
+        width: 100%;
+
+        height: auto;
+
+        border-radius: 10px;
+
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+
+    }
+
+
+
+    .h-div {
+
+        text-align: center;
+
+        color: #363020;
+
+        padding-bottom: 20px;
+
+        font-size: 20px;
+
+
+
+    }
+
+
+
+    #imageModal span {
+
+        position: absolute;
+
+        top: 10px;
+
+        right: 15px;
+
+        font-size: 30px;
+
+        color: #fff;
+
+        cursor: pointer;
+
+    }
+
+
+
+    /* Responsive Cards */
+
+    @media(max-width:1024px) {
+
+        .gallery-card {
+
+            width: 300px;
+
+            height: 450px;
+
+        }
+
+
+
+    }
+
+
+
+    @media(max-width:768px) {
+
+        .gallery-card {
+
+            width: 45%;
+
+            height: 400px;
+
+        }
+
+    }
+
+
+
+    @media(max-width:480px) {
+
+        .gallery-card {
+
+            width: 90%;
+
+            height: 500px;
+
+        }
+
+    }
+
+
+
+    .MAIN-GALLERY2 {
+
+        background-color: #e5d2c4;
+
+        background-color: #f2e8e1;
+
+        padding-top: 50px;
+
+        padding-bottom: 55px;
+
+    }
+
+
+
+    .MAIN-GALLERY {
+
+        background-color: #f2e8e1;
+
+        padding-top: 50px;
+
+        padding-bottom: 55px;
+
+    }
+
+   
+
+    /* ===== SAME SIZE FOR ALL GALLERY SECTIONS ===== */
+
+.MAIN-GALLERY,
+
+.MAIN-GALLERY2,
+
+.MAIN-GALLERY3 {
+
+width: 100%;
+
+min-height: 100vh;   /* sab sections same height */
+
+padding: 60px 2%;
+
+box-sizing: border-box;
+
+background-color: #E8E0D2
+
+}
+
+.h-div {
+
+text-align: center;
+
+color: #3b2f2f;
+
+padding-bottom: 20px;
+
+font-size: 22px;
+
+font-family: "Playfair Display", serif;
+
+letter-spacing: 1px;
+
+}
+
+.h-div i {
+
+font-style: normal;
+
+font-family: "Poppins", sans-serif;
+
+font-size: 20px;
+
+color: #8b5b40;
+
+}
+
+/* ===== RESPONSIVE CATEGORY LIST ===== */
+
+.list-glry ul li {
+
+padding: 8px 14px;
+
+border-radius: 20px;
+
+background: #e8e0d2;
+
+font-family: "Poppins", sans-serif;
+
+font-size: 13px;
+
+margin: 6px;
+
+transition: 0.3s;
+
+}
+
+.list-glry ul li:hover {
+
+background: #8b5b40;
+
+color: #fff;
+
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+.list-glry ul {
+
+    width: 100%;
+
+    justify-content: center;
+
+}
+
+}
+
+.gallery-card span {
+
+font-family: "Poppins", sans-serif;
+
+font-size: 14px;
+
+letter-spacing: 1px;
+
+}
+
+</style>
+
+</style>
+
+</head><body ><header>
+
+    <div class="header" style="">
+
+        Welcome To glamourz ‘s Salon & Studio
+
+    </div header>
+
+</header>
+
+<!-- ............................................. -->
+
+<div>
+
+    <img src="" alt="img" srcset="">
+
+</div>
+
+
+
+<div class="list-glry">
+
+  <ul><li onclick="scrollToSection('all')">ALL</li>
+
+<li onclick="scrollToSection('engagement')">ENGAGMENT BRIDE'S</li>
+
+           <li onclick="scrollToSection('party')">PARTY MAKEUP</li>
+
+<li onclick="scrollToSection('bridalBtn')">BAARAT BRIDE'S</li>
+
+<li onclick="scrollToSection('mayoon')">MAYOON BRIDE'S</li>
+
+<li onclick="scrollToSection('hair')">HAIR STYLES</li>
+
+  </ul></div><div class="list-glry">  <ul><li onclick="scrollToSection('bridal-mehndi')">BRIDAL MEHNDI</li>
+
+<li onclick="scrollToSection('bridal-mehndi')">SIMPLE MEHNDI</li>
+
+<li onclick="scrollToSection('bridal-mehndi')">ARABIC MEHNDI</li>
+
+<li onclick="scrollToSection('other')">OTHERS</li>
+
+  </ul></div><!-- Gallery....................... -->
+
+<div class="MAIN-GALLERY"id="engagement"style="    background-color:#e5d2c4;">
+
+    <div>
+
+        <h4 class="h-div"><i style="color: burlywood;"> 💖glowx salon💖</i></h4>
+
+        <h3 class="h-div">
+
+           ✨ENGAGMENT BRIDE'S ✨
+
+        </h3>
+
+        <div class="gallery-container">
+
+            <div class="gallery-card"><img src="imgs glowz/engment.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/prty4.jpg" alt=""><span>Engagement 2</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/eng4.jpg" alt=""><span>Engagement 3</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/engmnet2.jpg" alt=""><span>Engagement 4</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ....... -->
+
+  <!-- Gallery....................... -->
+
+<div class="MAIN-GALLERY"id="bridal-section">
+
+    <div>
+
+        <h4 class="h-div"><i style="color: burlywood;"> 💖glowx salon💖</i></h4>
+
+        <h3 class="h-div">
+
+            <i>✨BARAT BRIDE'S ✨</i>
+
+        </h3>
+
+        <div class="gallery-container">
+
+              <div class="gallery-card"><img src="imgs glowz/barat2.jpg" alt=""><span>Engagement 3</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/barat.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/barat1.jpg" alt=""><span>Engagement 2</span></div>
+
+
+
+            <div class="gallery-card"><img src="imgs glowz/barat3.jpg" alt=""><span>Engagement 4</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<!-- ....... -->
+
+<div class="MAIN-GALLERY2" id="party"style="    background-color:#e5d2c4;">
+
+    <div>
+
+        <h4 class="h-div"><i>glowx salon</i></h4>
+
+        <h3 class="h-div">
+
+            <i>✨PART MAKEUP ✨</i>
+
+        </h3>
+
+        <div class="gallery-container">
+
+            <div class="gallery-card"><img src="imgs glowz/prty1.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/prt2.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/party3.jpg" alt=""><span>Engagement 1</span></div>
+
+                     <div class="gallery-card"><img src="imgs glowz/walima2.jpg" alt=""><span>Engagement 1</span></div>
+
+
+
+         
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- .......... -->
+
+<div class="MAIN-GALLERY3"id="mayoon">
+
+    <div>
+
+        <h4 class="h-div"><i>glowx salon</i></h4>
+
+        <h3 class="h-div">
+
+            <i>✨MAYOON BRIDE'S ✨</i>
+
+        </h3>
+
+        <div class="gallery-container">
+
+            <div class="gallery-card"><img src="imgs glowz/mayon1.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/212829e35638ea9402656ff0c71c7f1c.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/myoon2.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/mayonvedio.png" alt=""><span>Engagement 2</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- .........................mhndi.......... -->
+
+     <div class="MAIN-GALLERY3" id="bridal-mehndi"style="    background-color:#e5d2c4;">
+
+    <div>
+
+        <h4 class="h-div"><i>glowx salon</i></h4>
+
+        <h3 class="h-div">
+
+            <i>✨ BRIDAL MAHNDI ✨ </i>
+
+        </h3>
+
+        <div class="gallery-container">
+
+            <div class="gallery-card"><img src="imgs glowz/mhn2.jpg" alt=""><span>bridal mahndi</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/mhn3.jpg" alt=""><span>bridal Mehndi 2</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/mhn4.jpg" alt=""><span>bridal Mehndi 3</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/mhndi4.jpg" alt=""><span>bridal Mehndi 4</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+   <!-- Gallery....................... -->
+
+<div class="MAIN-GALLERY"id="hair">
+
+    <div>
+
+        <h4 class="h-div"><i style="color: burlywood;"> 💖glowx salon💖</i></h4>
+
+        <h3 class="h-div">
+
+            <i>✨ENGAGMENT BRIDE'S ✨</i>
+
+        </h3>
+
+        <div class="gallery-container">
+
+              <div class="gallery-card"><img src="imgs glowz/hair1.jpg" alt=""><span>Engagement 3</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/hair2.jpg" alt=""><span>Engagement 1</span></div>
+
+            <div class="gallery-card"><img src="imgs glowz/hair3.jpg" alt=""><span>Engagement 2</span></div>
+
+
+
+            <div class="gallery-card"><img src="imgs glowz/0c29aa6b45121c4c27c702aa5a541c6f.jpg" alt=""><span>Engagement 4</span></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ....... -->
+
+<script>
+
+function scrollToSection(sectionId) {
+
+const section = document.getElementById(sectionId);
+
+if(section){
+
+    section.scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+}
+
+}
+
+</script>
+
+</body></html>

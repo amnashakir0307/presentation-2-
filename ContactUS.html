@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us | Luxury Salon</title>
+
+<style>
+/* ===== RESET ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* ===== HERO ===== */
+.hero{
+    height:45vh;
+    background:linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)),
+    url("https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+.hero h1{
+    color:#fff;
+    font-size:42px;
+    letter-spacing:2px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.contact{
+    padding:60px 8%;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:40px;
+}
+
+/* ===== FORM ===== */
+.form-box h2{
+    margin-bottom:8px;
+    font-size:26px;
+}
+.form-box p{
+    color:#777;
+    margin-bottom:25px;
+}
+
+.form-box input,
+.form-box textarea{
+    width:100%;
+    padding:12px 14px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:14px;
+}
+.form-box textarea{
+    height:120px;
+    resize:none;
+}
+.form-box button{
+    background:#c59d5f;
+    color:#fff;
+    border:none;
+    padding:12px 35px;
+    border-radius:6px;
+    font-size:15px;
+    cursor:pointer;
+}
+.form-box button:hover{
+    background:#b58a4a;
+}
+
+/* ===== INFO BOX ===== */
+.info-box{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+.info{
+    background:#f8f8f8;
+    padding:20px;
+    border-radius:8px;
+    display:flex;
+    gap:15px;
+    align-items:center;
+}
+.icon{
+    font-size:24px;
+    color:#c59d5f;
+}
+.info h4{
+    font-size:16px;
+}
+.info p{
+    font-size:14px;
+    color:#555;
+}
+
+/* ===== MAP ===== */
+.map{
+    padding:0 8% 60px;
+}
+.map iframe{
+    width:100%;
+    height:300px;
+    border:none;
+    border-radius:10px;
+}
+
+/* ===== FOOTER ===== */
+footer{
+    background:#111;
+    color:#aaa;
+    padding:45px 8%;
+}
+.footer{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:30px;
+}
+footer h3{
+    color:#fff;
+    margin-bottom:15px;
+}
+footer a{
+    display:block;
+    text-decoration:none;
+    color:#aaa;
+    margin-bottom:8px;
+    font-size:14px;
+}
+.copy{
+    text-align:center;
+    margin-top:30px;
+    font-size:13px;
+    color:#777;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px){
+    .contact{
+        grid-template-columns:1fr;
+    }
+}
+
+@media (max-width: 600px){
+    .hero{
+        height:30vh;
+    }
+    .hero h1{
+        font-size:28px;
+    }
+    .contact{
+        padding:40px 5%;
+    }
+    .info{
+        flex-direction:column;
+        text-align:center;
+    }
+    .map iframe{
+        height:220px;
+    }
+    footer{
+        padding:35px 5%;
+        text-align:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <h1>Contact Us</h1>
+</section>
+
+<!-- CONTACT -->
+<section class="contact">
+
+    <!-- FORM -->
+    <div class="form-box">
+        <h2>Get In Touch</h2>
+        <p>Feel free to contact us for bookings and queries.</p>
+
+        <input type="text" placeholder="Your Name">
+        <input type="email" placeholder="Email Address">
+        <input type="text" placeholder="Subject">
+        <textarea placeholder="Your Message"></textarea>
+        <button>Send Message</button>
+    </div>
+
+    <!-- INFO -->
+    <div class="info-box">
+        <div class="info">
+            <div class="icon">📞</div>
+            <div>
+                <h4>Phone Number</h4>
+                <p>0301-1234567</p>
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="icon">📧</div>
+            <div>
+                <h4>Email Address</h4>
+                <p>info@luxurysalon.com</p>
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="icon">📍</div>
+            <div>
+                <h4>Our Location</h4>
+                <p>Karachi • Lahore • Nazeerabad</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- MAP -->
+<section class="map">
+    <iframe src="https://www.google.com/maps?q=karachi&output=embed"></iframe>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer">
+        <div>
+            <h3>Luxury Salon</h3>
+            <p>Premium beauty & grooming services.</p>
+        </div>
+
+        <div>
+            <h3>Quick Links</h3>
+            <a href="#">Home</a>
+            <a href="#">Services</a>
+            <a href="#">Gallery</a>
+            <a href="#">Contact</a>
+        </div>
+
+        <div>
+            <h3>Get In Touch</h3>
+            <p>📍 Pakistan</p>
+            <p>📞 0301-1234567</p>
+            <p>📧 info@luxurysalon.com</p>
+        </div>
+    </div>
+
+    <div class="copy">
+        © 2025 Luxury Salon | All Rights Reserved
+    </div>
+</footer>
+
+</body>
+  </html>
